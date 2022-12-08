@@ -1,0 +1,257 @@
+{% extends 'base_detail.html' %}
+{% load widget_tweaks %}
+{% load static %}
+{% block head %}
+
+
+{% endblock %}
+{% block navbar %}
+    <div class="row mb-3">
+        <div class="col-lg-1" >
+            <a class="btn btn-primary"  href="{% url 'task_detail' task.pk %}">이전</a>
+        </div>
+        <div class="col-lg-11" >
+            <h6>진행률</h6>
+            <div class="progress">
+                <div class="progress-bar" role="progressbar" style="width:0%">
+                    <span class="sr-only"><span class="idNumber"></span>/{{ overall|length }}</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <hr>
+{% endblock %}
+
+{% block left_side %}
+    <ul class="nav nav-tabs">
+        <li class="nav-item">
+            <a class="nav-link tabMenu active" aria-current="page" onclick="tabSwitch('qa')">QA 질문</a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link tabMenu" onclick="tabSwitch('task')">Task</a>
+        </li>
+    </ul>
+    <script>
+
+    </script>
+    <div class="tabular" style="padding:10px">
+        <div>
+            <h5 > <span class="complete-viewer">{{ questionary.order }}</span> {{ questionary.title }}</h5>
+            <p>{{ questionary.questionary|linebreaks }}</p>
+            <h5>담당자 : {{ task.charge }}</h5>
+        </div>
+        <div>
+            <p> <span>{{ task.start_date }}</span> ~ <span>{{ task.due_date  }}</span></p>
+        </div>
+        <div>
+            {% if questionary.image %}
+                <a href="{{ questionary.image.url }}" data-lightbox="image-1" data-title="My caption">
+                    <img style="height: 200px; width: auto;"  src="{{ questionary.image.url }}  " alt="img">
+                </a>
+            {% endif %}
+
+        </div>
+
+        <div>
+            <hr>
+                <div>
+                    <a class="btn btn-primary"  href="{% url 'questionary_update' questionary.pk %}">수정</a>
+                </div>
+            <hr>
+        </div>
+    </div>
+    <div class="tabular" style="display: none; padding:10px">
+        <div>
+            <h1>{{ task.title }}</h1>
+            <h3>담당자 : {{ task.charge }}</h3>
+            <p> {{ task.contents|linebreaks }}</p>
+        </div>
+        <div>
+            <p> <span>{{ task.start_date }}</span> ~ <span>{{ task.due_date  }}</span></p>
+        </div>
+        <div>
+            {% if task.image %}
+                <a href="{{ task.image.url }}" data-lightbox="image-1" data-title="My caption">
+                    <img style="height: 200px; width: auto;"  src="{{ task.image.url }}  " alt="img">
+                </a>
+            {% endif %}
+
+        </div>
+        <div>
+            <hr>
+                <div>
+                    <a class="btn btn-primary"  href="{% url 'task_update_form' task.pk %}">수정</a>
+                </div>
+            <hr>
+        </div>
+    </div>
+
+
+{% endblock %}
+
+{% block right_side %}
+    <form method="post">
+        {% csrf_token %}
+        <div class="container">
+            <label class="form-check-label" for="id_workable"> <span class="text-var">오류 발생</span></label>
+            {{ form.selection | add_class:"checkbox form-select form-select-sm"}}
+        </div>
+        <div class="form-check">
+
+        </div>
+        <div class="detail-description">
+            <div class="input-group">
+                <span class="input-group-text">내용</span>
+                {{ form.description |add_class:"form-control"}}
+            </div>
+        </div>
+        <hr class="my-4">
+        <input class="w-100 btn btn-primary btn-lg" type="submit", value="제출하기">
+    </form>
+    <hr>
+    <div class="my-3 p-3 bg-body rounded shadow-sm">
+        <h6 class="border-bottom pb-2 mb-0">내용</h6>
+         {% if questionary.image %}
+            <div class="col-lg-6">
+                <a href="{{ questionary.image.url }}" data-lightbox="image-1" data-title="My caption">
+                    <img style="height: 200px; width: auto;"  src="{{ questionary.image.url }}  " alt="img">
+                </a>
+            </div>
+        {% endif %}
+
+
+
+
+
+        {% if result|length == 0 %}
+            <p>QA 리뷰가 없습니다.</p>
+        {% else %}
+            {% for foo in result %}
+                <div class="d-flex text-muted pt-3 yourcheck">
+                    {% if foo.selection == 'work' %}
+                        <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#7DFF33"></rect><text x="50%" y="50%" fill="#7DFF33" dy=".3em">32x32</text></svg>
+                    {% else %}
+                        <svg class="bd-placeholder-img flex-shrink-0 me-2 rounded" width="32" height="32" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 32x32" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#FF3333"></rect><text x="50%" y="50%" fill="#FF3333" dy=".3em">32x32</text></svg>
+                    {% endif %}
+
+                    <div class="pb-3 mb-0 small lh-sm border-bottom w-100">
+                        <div class="d-flex justify-content-between">
+                            <strong class="text-gray-dark">{{ foo.user }}</strong>
+                            {% if foo.user == userinfo.username  %}
+                                <a href="{% url 'deletion' foo.pk %}">삭제하기</a>
+                            {% endif %}
+                        </div>
+                        {% if foo.able %}
+                            <span class="d-block"> <strong>정상 작동중</strong></span>
+                        {% else %}
+                            {% if foo.errors %}
+                                <span class="d-block">보고된 문제</span>
+                            {% else %}
+                                 <span class="d-block">{{ foo.description }}</span>
+                            {% endif %}
+                        {% endif %}
+                    </div>
+                </div>
+            {% endfor %}
+        {% endif %}
+
+    </div>
+    <hr>
+    <div>
+        <div style="padding: 10px">
+            <button type="button" class="btn btn-secondary btn-lg" onclick="minusIndex(theList)">이전</button>
+            <button type="button" class="btn btn-primary btn-lg" onclick="addIndex(theList)">다음</button>
+        </div>
+    </div>
+
+
+
+    <script>
+
+
+    let theList = {{ overall }};
+    let theListLength = {{ overall|length }};
+    var currentLocation = theList.indexOf({{ questionary.pk }}) + 1
+    var percentage = parseInt(currentLocation/theListLength*100)
+    document.querySelector('.idNumber').innerText = currentLocation
+    document.querySelector('.progress-bar').style.width=percentage+'%'
+
+    let checkBtn = document.querySelector('.checkbox');
+
+
+    checkBtn.addEventListener('change', () =>{
+        var slectedValue = checkBtn.options[checkBtn.selectedIndex].value
+        if(slectedValue == 'reported'){
+            document.querySelector('.detail-description').style.visibility = 'hidden'
+
+        }else{
+            document.querySelector('.detail-description').style.visibility = ''
+        }
+    });
+
+
+
+    var completeChecker = document.querySelectorAll('.yourcheck').length
+    if (completeChecker != 0){
+        document.querySelector('.complete-viewer').innerHTML = '[QA완료]'
+    }
+
+
+    function addIndex(data) {
+        var locate = {{ questionary.pk }}
+        var currentLocation = data.indexOf(locate)
+        var listLength = data.length
+
+        if (locate == data[listLength-1]){
+            alert('test 종료')
+        }else{
+            currentLocation += 1
+            var destination = data[currentLocation]
+            window.location.href = `/questions/${destination}/`
+        }
+    }
+
+    function minusIndex(data) {
+        var locate = {{ questionary.pk }}
+        var currentLocation = data.indexOf(locate)
+
+        if (locate == data[0]){
+            alert('처음입니다.')
+        }else{
+            currentLocation -= 1
+            var destination = data[currentLocation]
+            window.location.href = `/questions/${destination}/`
+        }
+    }
+
+    function tabSwitch(text){
+            var tabs = document.querySelectorAll('.tabular')
+            var navLink = document.querySelectorAll('.tabMenu')
+            if (text == 'qa'){
+                if (navLink[0].classList.item(2) == 'active'){
+                }else{
+                    tabs[0].style.display = 'inline'
+                    tabs[1].style.display = 'none'
+
+
+                    navLink[0].classList.toggle("active")
+                    navLink[1].className += 'active'
+                }
+
+            }else{
+                if (navLink[1].classList.item(2) == 'active') {
+                }else{
+                     tabs[0].style.display = 'none'
+                    tabs[1].style.display = 'inline'
+
+                    navLink[0].className += 'active'
+                    navLink[1].classList.toggle("active")
+                }
+            }
+
+
+        }
+    </script>
+{% endblock %}
+

@@ -1,0 +1,48 @@
+{% extends 'base_detail.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block navbar %}
+    <div>
+        <a class="btn btn-primary" href="{% url 'test_set_input_form' %}">스프린트 만들기</a>
+    </div>
+    <hr>
+{% endblock %}
+
+{% block left_side %}
+    <div>
+        <h1>SPRINT</h1>
+        <p>현재 진행중인 스프린트를 표시해주는 창입니다. </p>
+    </div>
+{% endblock %}
+
+
+{% block right_side %}
+     <div>
+        <a class="btn btn-primary" href="{% url 'test_set_input_form' %}">스프린트 만들기</a>
+    </div>
+    <hr>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">id</th>
+                <th scope="col">title</th>
+                <th scope="col">contents</th>
+                <th scope="col">이동</th>
+                <th scope="col">수정</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for data in sprint_list %}
+                <tr>
+                    <th scope="row">{{ data.pk }}</th>
+                    <td>{{ data.title }}</td>
+                    <td>{{ data.contents|truncatechars:20 }}</td>
+                    <td><a type="button" class="btn btn-outline-secondary btn-sm" href="{% url 'scenario' data.id %}">이동</a></td>
+                    <td><a type="button" class="btn btn-outline-secondary btn-sm" href="{% url 'test_set_delete' data.pk%}">삭제</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+

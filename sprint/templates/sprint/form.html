@@ -1,0 +1,141 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block head %}
+
+{% endblock %}
+{% block contents %}
+<div class="row mb-3">
+
+{% if form.start_date %}
+    <!-- task -->
+    <div class="col-lg-6" style="overflow: scroll; min-width: 400px; height: 100vh">
+        <h1>{{ data.title }}</h1>
+        <p1>{{ data.contents|linebreaks }}</p1>
+        {% if data.image %}
+            <div>
+                <a href="{{ data.image.url }}" data-lightbox="image-1" data-title="My caption">
+                    <img style="height: 400px; width: auto;"  src="{{ data.image.url }}  " alt="img">
+                </a>
+            </div>
+        {% endif %}
+
+    </div>
+
+{% else %}
+
+    <div class="col-lg-6" style="overflow: scroll; min-width: 400px; height: 100vh">
+        <!-- scenario -->
+
+        <h1>{{ data.title }}</h1>
+        <p1>{{ data.contents|linebreaks }}</p1>
+        {% if data.image %}
+            <div>
+                <a href="{{ data.image.url }}" data-lightbox="image-1" data-title="My caption">
+                    <img style="height: 400px; width: auto;"  src="{{ data.image.url }}  " alt="img">
+                </a>
+            </div>
+        {% endif %}
+
+    </div>
+{% endif %}
+
+    <div class="col-lg-6" >
+
+    {% if form.start_date %}
+        <form action="" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+             <div class="form-group">
+                <label for="exampleFormControlTextarea1">제목</label>
+                {{ form.title|add_class:"form-control"}}
+            </div>
+            <div class="form-group">
+                <label for="exampleFormControlTextarea1">설명</label>
+                {{ form.contents|add_class:"form-control"}}
+            </div>
+            <div class="form-group">
+                <label for="exampleFormControlTextarea1">시작일</label>
+                {{ form.start_date|add_class:"form-control"}}
+            </div>
+            <div class="column">
+                 <div class="form-group">
+                    <label for="exampleFormControlTextarea1">종료일</label>
+                    {{ form.due_date|add_class:"form-control"}}
+                </div>
+                <div class="form-group">
+                    <label for="exampleFormControlTextarea1">담당자</label>
+                    {{ form.charge|add_class:"form-control"}}
+                </div>
+            </div>
+
+            <div class="form-group">
+                <label for="exampleFormControlTextarea1">이미지</label>
+                {{ form.image|add_class:"form-control"}}
+            </div>
+            <hr>
+            <input type="submit" value="Submit">
+        </form>
+    {% elif form.image %}
+        <form action="" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+             <div class="form-group">
+                <label for="exampleFormControlTextarea1">제목</label>
+                {{ form.title|add_class:"form-control"}}
+            </div>
+            <div class="form-group">
+                <label for="exampleFormControlTextarea1">설명</label>
+                {{ form.contents|add_class:"form-control"}}
+            </div>
+            <div class="form-group">
+                <label for="exampleFormControlTextarea1">설명</label>
+                {{ form.image|add_class:"form-control"}}
+            </div>
+            <hr>
+
+            <input type="submit" value="Submit">
+        </form>
+    {% else %}
+        <form action="" method="post" enctype="multipart/form-data">
+            {% csrf_token %}
+            <div class="form-group">
+                <label for="exampleFormControlTextarea1">제목</label>
+                {{ form.title|add_class:"form-control"}}
+            </div>
+            <div class="form-group">
+                <label for="exampleFormControlTextarea1">설명</label>
+                {{ form.contents|add_class:"form-control" }}
+            </div>
+            <hr>
+
+            <input type="submit" value="Submit">
+        </form>
+    {% endif %}
+    </div>
+</div>
+<script>
+
+    $.datepicker.setDefaults({
+      dateFormat: 'yy-mm-dd',
+      prevText: '이전 달',
+      nextText: '다음 달',
+      monthNames: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+      monthNamesShort: ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월'],
+      dayNames: ['일', '월', '화', '수', '목', '금', '토'],
+      dayNamesShort: ['일', '월', '화', '수', '목', '금', '토'],
+      dayNamesMin: ['일', '월', '화', '수', '목', '금', '토'],
+      showMonthAfterYear: true,
+      yearSuffix: '년'
+    });
+
+    $(function(){
+        $('#id_due_date').datepicker();
+    })
+    $(function(){
+        $('#id_start_date').datepicker();
+    })
+
+</script>
+
+{% endblock %}
+

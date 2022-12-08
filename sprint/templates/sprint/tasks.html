@@ -1,0 +1,61 @@
+{% extends 'base_detail.html' %}
+{% load static %}
+
+{% block navbar %}
+<div class="column">
+    <a class="btn btn-primary" href="{% url 'scenario' test_set.set.pk%}">이전</a>
+    <a class="btn btn-secondary" href="{% url 'scenario_update_form' test_set.pk %}">시나리오 수정</a>
+{#    <a class="btn btn-secondary" href="{% url 'scenario_delete' test_set.pk %}">삭제</a>#}
+</div>
+
+<hr>
+{% endblock %}
+
+{% block left_side %}
+    <div>
+        <h1>{{ test_set.title}}</h1>
+    </div>
+
+    <div>
+        <p>{{ test_set.contents|linebreaks }}</p>
+    </div>
+    <div>
+        {% if test_set.image %}
+            <a href="{{ test_set.image.url }}" data-lightbox="image-1" data-title="My caption">
+                <img style="height: 200px; width: auto;"  src="{{ test_set.image.url }}  " alt="img">
+            </a>
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block right_side %}
+    <div>
+        <a class="btn btn-secondary" href="{% url 'task_input_form' test_set.pk %}">할일 만들기</a>
+        <a class="btn btn-secondary" href="{% url 'duplicated_task' test_set.pk%}">할일 가져오기</a>
+    </div>
+    <hr>
+        <table class="table">
+            <thead>
+                <tr>
+                    <th scope="col">id</th>
+                    <th scope="col">title</th>
+                    <th scope="col">contents</th>
+                    <th scope="col">이동</th>
+                    <th scope="col">삭제</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for data in data_list %}
+                    <tr>
+                        <th scope="row">{{ data.pk }}</th>
+                        <td>{{ data.title }}</td>
+                        <td>{{ data.contents|truncatechars:20 }}</td>
+                        <td><a type="button" class="btn btn-outline-secondary btn-sm" href="{% url 'sprint_detail' data.pk %}">이동</a></td>
+                        <td><a type="button" class="btn btn-outline-secondary btn-sm" href="{% url 'remove_duplicated_task' data.pk %}">삭제</a></td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {{ request}}
+{% endblock %}

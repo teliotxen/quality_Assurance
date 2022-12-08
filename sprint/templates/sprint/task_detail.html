@@ -1,0 +1,60 @@
+{% extends 'base_detail.html' %}
+{% load static %}
+{% load widget_tweaks %}
+{% block navbar %}
+    <div>
+        <a class="btn btn-primary" href="{% url 'tasks' data.set.pk%}">이전</a>
+        <a class="btn btn-primary"  href="{% url 'task_delete' data.pk%}">삭제</a>
+        <a class="btn btn-primary"  href="{% url 'task_update_form' data.pk%}">수정</a>
+    </div>
+    <hr>
+{% endblock %}
+
+{% block left_side %}
+    <div>
+        <h1>{{ data.title }}</h1>
+        <h3>담당자 : {{ data.charge }}</h3>
+        <p> {{ data.contents|linebreaks }}</p>
+    </div>
+    <div>
+        <p> <span>{{ data.start_date }}</span> ~ <span>{{ data.due_date  }}</span></p>
+    </div>
+    <div>
+        {% if data.image %}
+             <a href="{{ data.image.url }}" data-lightbox="image-1" data-title="My caption">
+                <img style="height: 200px; width: auto;"  src="{{ data.image.url }}  " alt="img">
+            </a>
+        {% endif %}
+
+    </div>
+{% endblock %}
+
+{% block right_side %}
+    <div>
+        <a class="btn btn-primary" href="{% url 'questionary_input' data.pk%}"> QA 질문 만들기</a>
+    </div>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">id</th>
+                <th scope="col">title</th>
+                <th scope="col">contents</th>
+                <th scope="col">이동</th>
+                <th scope="col">삭제</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for data in questions %}
+                <tr>
+                    <th scope="row">{{ data.pk }}</th>
+                    <td>{{ data.order }}</td>
+                    <td>{{ data.questionary|truncatechars:20 }}</td>
+                    <td><a type="button" class="btn btn-outline-secondary btn-sm" href="{% url 'detail' data.pk %}">이동</a></td>
+                    <td><a type="button" class="btn btn-outline-secondary btn-sm" href="{% url 'scenario_delete' data.pk%}">삭제</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}
+
+

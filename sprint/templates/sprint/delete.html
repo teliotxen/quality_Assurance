@@ -1,0 +1,43 @@
+
+{% extends 'base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block head %}
+
+{% endblock %}
+
+
+
+{% block contents %}
+
+
+
+<div>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">오브젝트 삭제</h5>
+      </div>
+      <div class="modal-body">
+        <p>작성하신 오브젝트를 삭제하시겠습니까? </p>
+      </div>
+      <div class="modal-footer">
+
+          {% if "testset" in request.path %}
+              <a class="btn btn-secondary" href="{% url 'sprint' %}">취소</a>
+          {% elif 'task' in request.path %}
+              <a class="btn btn-secondary" href="{% url 'tasks' data.set.pk%}">취소</a>
+          {% else %}
+              <a class="btn btn-secondary" href="{% url 'scenario' data.set.pk%}">취소</a>
+          {% endif %}
+        <form method="post">
+        {% csrf_token %}
+         <input class="btn btn-primary" type="submit", value="오브젝트 삭제">
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

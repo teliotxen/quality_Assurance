@@ -1,0 +1,53 @@
+{% extends 'base_detail.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block navbar %}
+<div class="column">
+    <a class="btn btn-primary" href="{% url 'task_detail' task.pk%}">이전</a>
+</div>
+{% endblock %}
+
+{% block left_side %}
+<div>
+        <h1>{{ task.title}}</h1>
+    </div>
+
+    <div>
+        <p>{{ task.contents|linebreaks }}</p>
+    </div>
+    <div>
+        {% if task.image %}
+            <img src="{{ task.image.url }}" class="img-fluid" alt="Responsive image">
+        {% endif %}
+    </div>
+{% endblock %}
+
+{% block right_side %}
+    <h1>QA 질문지 작성</h1>
+    <br>
+    <form action="" method="post" enctype="multipart/form-data">
+        <div class="form-group" >
+             <label for="exampleFormControlTextarea1">제목</label>
+            {{ form.title|add_class:"form-control" }}
+        </div>
+        <br>
+        <div class="form-group" >
+             <label for="exampleFormControlTextarea1">질문 내용</label>
+            {{ form.questionary|add_class:"form-control" }}
+        </div>
+        <br>
+        <div class="form-group" >
+            <label for="exampleFormControlTextarea1">첨부 사진</label>
+           {{ form.image|add_class:"form-control" }}
+        </div>
+        {% csrf_token %}
+        <hr>
+        <input type="submit" value="Submit">
+    </form>
+{% endblock %}
+
+{% block contents %}
+
+{% endblock %}
+

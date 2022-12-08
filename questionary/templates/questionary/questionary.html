@@ -1,0 +1,68 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+<div class="list-group">
+
+{% block contents %}
+    <div>
+
+        <a href="{% url 'questionary_input' pid%}">문항 생성</a>
+    </div>
+    <p>{{ request.user}}</p>
+    <p>{{ theid}}</p>
+    <p>총 문항 수 : {{ total_numb|length }}</p>
+    <p>검수 완료 문항 수 : {{ complete_numb }}</p>
+    <p>오류 문항수 : {{ error_list|length }} <span><a href="{% url 'issue' pid %}">확인하기</a></span></p>
+    {% for datum in question_list %}
+     <a class="list-group-item list-group-item-action d-flex gap-3 py-3" href="{% url 'detail' datum.pk %}">
+
+     <div class="container complete-display-checker">
+      <div class="row">
+        <div class="col-1 ">
+          <span class="as-list-index" style="visibility: hidden">{{ datum.pk }}</span>
+        </div>
+        <div class="col-1">
+          {{ datum.order}}
+        </div>
+        <div class="col-10">
+          {{ datum.questionary }}
+        </div>
+      </div>
+    </div>
+     </a>
+    {% endfor %}
+
+    <script>
+        var reviewList = {{ answered }}
+        var errList = {{error_list}}
+        var comList = {{ complete_list }}
+        var listIndex = document.querySelectorAll('.as-list-index')
+        console.log(reviewList)
+        console.log(errList)
+        console.log(comList)
+        console.log(listIndex)
+
+        for (var x of listIndex){
+            var cnt = x.innerHTML
+            for (var y of comList){
+                if (y == cnt ){
+                    x.innerHTML = '완료'
+                    x.style.color = 'white'
+                    var test = x.parentNode.parentNode.parentNode.parentNode
+                    test.style.backgroundColor = 'green'
+                    x.style.visibility = ''
+                }
+            }
+            for (var z of errList){
+                if (z == cnt ){
+                    x.innerHTML = '오류'
+                    x.style.visibility = ''
+                    x.style.color = 'white'
+                    var test = x.parentNode.parentNode.parentNode.parentNode
+                    test.style.backgroundColor = 'red'
+                }
+            }
+        }
+
+    </script>
+{% endblock %}
+</div>

@@ -1,0 +1,71 @@
+{% extends 'base_detail.html' %}
+{% load static %}
+{% load widget_tweaks %}
+{% block navbar %}
+    <div class="row mb-3" style="padding-top: 5px">
+        <div class="col-lg-6">
+            <a class="btn btn-primary" href="{% url 'sprint' %}">이전</a>
+            <a class="btn btn-secondary" href="{% url 'test_set_update_form' test_set.pk %}">스프린트 수정</a>
+        </div>
+        <div class="col-lg-6" style="padding-top: 5px">
+            <div class="dropdown show">
+            <a class="btn btn-secondary dropdown-toggle" onclick="downdownMenu()" role="button" id="dropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+            Dropdown link
+            </a>
+            <div class="dropdown-menu" aria-labelledby="dropdownMenuLink">
+                <a class="dropdown-item" href="{% url 'scenario_csv' test_set.pk %}" onclick="downdownMenu()">모든 시나리오 다운로드</a>
+                <a class="dropdown-item" href="{% url 'tasks_csv' test_set.pk %}" onclick="downdownMenu()">모든 할일 다운로드</a>
+                <a class="dropdown-item" href="{% url 'qa_csv' test_set.pk%}" onclick="downdownMenu()">모든 QA항목 다운로드</a>
+            </div>
+            </div>
+        </div>
+    </div>
+    <hr>
+    <script>
+    function downdownMenu(){
+        var target = document.querySelector(".dropdown-menu")
+        if (target == 1){
+            target.className += 'show'
+        }else{
+            target.classList.toggle('show')
+        }
+    }
+    </script>
+
+{% endblock %}
+{% block left_side %}
+    <div>
+        <h1>{{ test_set.title}}</h1>
+        <p>{{ test_set.contents|linebreaks }}</p>
+    </div>
+
+{% endblock %}
+
+{% block right_side %}
+    <div>
+        <a class="btn btn-secondary" href="{% url 'scenario_input_form' test_set.pk %}">시나리오 만들기</a>
+    </div>
+    <hr>
+    <table class="table">
+        <thead>
+            <tr>
+                <th scope="col">id</th>
+                <th scope="col">title</th>
+                <th scope="col">contents</th>
+                <th scope="col">이동</th>
+                <th scope="col">삭제</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for data in data_list %}
+                <tr>
+                    <th scope="row">{{ data.pk }}</th>
+                    <td>{{ data.title }}</td>
+                    <td>{{ data.contents|truncatechars:20 }}</td>
+                    <td><a type="button" class="btn btn-outline-secondary btn-sm" href="{% url 'tasks' data.pk %}">이동</a></td>
+                    <td><a type="button" class="btn btn-outline-secondary btn-sm" href="{% url 'scenario_delete' data.pk%}">삭제</a></td>
+                </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+{% endblock %}

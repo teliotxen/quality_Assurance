@@ -1,0 +1,34 @@
+
+{% extends 'base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block head %}
+
+{% endblock %}
+
+{% block contents %}
+
+
+
+<div>
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">할 일 제거하기</h5>
+      </div>
+      <div class="modal-body">
+        <p>작성하신 오브젝트를 삭제하시겠습니까? </p>
+      </div>
+      <div class="modal-footer">
+        <a class="btn btn-secondary" href="{% url 'tasks' data.pk%}">취소</a>
+        <form method="post">
+        {% csrf_token %}
+         <input class="btn btn-primary" type="submit", value="할일 제거">
+        </form>
+      </div>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

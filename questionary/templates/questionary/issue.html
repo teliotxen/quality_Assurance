@@ -1,0 +1,50 @@
+{% extends 'base.html' %}
+{% load widget_tweaks %}
+{% load static %}
+
+{% block contents %}
+<table class="table">
+<thead>
+    <tr>
+        <th scope="col">프로젝트</th>
+        <th scope="col">이슈내용</th>
+        <th scope="col">담당자</th>
+        <th scope="col">보고자</th>
+        <th scope="col">보고일시</th>
+        <th scope="col">확인</th>
+    </tr>
+</thead>
+<tbody>
+{% for issue in issues %}
+    <tr>
+        <th scope="row">{{ issue.category }}</th>
+        <td><a href="{% url 'detail' issue.Question_number%}">{{ issue.questions }}</a></td>
+        <td>{{ issue.user }}</td>
+        <td>{{ issue.charge }}</td>
+        <td>{{ issue.updated_at|date:'Y-m-d H:i' }}</td>
+        {% if issue.review %}
+            <td><a class="button review-check" href="{% url 'confirm' issue.pk %}">완료</a></td>
+        {% else %}
+            <td><a class="button review-check" href="{% url 'confirm' issue.pk %}">확인</a></td>
+        {% endif %}
+
+    </tr>
+{% endfor %}
+
+</tbody>
+</table>
+
+
+<script>
+    let theList = document.querySelectorAll('.review-check')
+    for (var i of theList){
+        console.log(i)
+        if(i.innerText == '완료'){
+            console.log(i.parentNode.parentNode)
+            var item = i.parentNode.parentNode
+            item.style.backgroundColor ='grey'
+        }
+    }
+
+</script>
+{% endblock %}

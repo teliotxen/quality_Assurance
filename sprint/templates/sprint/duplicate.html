@@ -1,0 +1,36 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load widget_tweaks %}
+
+{% block contents %}
+    <div>
+     <h2>할일 리스트</h2>
+    </div>
+    <br>
+
+    <form method="post">
+
+        {% for datum in data %}
+        <div class= "input-group mb-3">
+            <div class="form-check" >
+              <input class="form-check-input" type="checkbox" name="answer[]" id={{ datum.pk }} value={{ datum.pk }}>
+              <label class="form-check-label" for="flexCheckDefault">
+                {{ datum.title }} - {{ datum.contents }}
+              </label>
+            </div>
+        </div>
+
+        {% endfor %}
+        {% csrf_token %}
+        <br>
+        <div>
+
+            <a class="btn btn-secondary" href="{% url 'tasks' pk_num %}">최소</a>
+            <input class="btn btn-primary" type="submit" value="확인">
+        </div>
+
+    </form>
+{% endblock %}
+
+
+
